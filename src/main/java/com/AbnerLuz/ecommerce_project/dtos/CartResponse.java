@@ -1,9 +1,9 @@
 package com.AbnerLuz.ecommerce_project.dtos;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public record CartResponse(
     Long id,
     Long userId,
-    List<CartItemResponse> items
+    ArrayList<CartItemResponse> items
 ) { }

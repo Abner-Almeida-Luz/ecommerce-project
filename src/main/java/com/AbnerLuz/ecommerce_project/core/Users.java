@@ -35,7 +35,7 @@ public class Users implements UserDetails {
     private LocalDateTime createdAt;
 
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
-    Carts carts;
+    Carts cart;
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     List<Orders> orders = new ArrayList<>();
 
