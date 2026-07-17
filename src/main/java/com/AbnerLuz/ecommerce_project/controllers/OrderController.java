@@ -14,13 +14,13 @@ import java.util.List;
 public class OrderController {
     private final OrderService orderService;
 
-    @GetMapping("/checkout/{cartId}")
+    @PostMapping("/checkout/{cartId}")
     public ResponseEntity<OrderResponse> checkout(@PathVariable Long cartId) {
         return ResponseEntity.ok(orderService.checkout(cartId));
     }
 
     @GetMapping("/list-all-user-orders/{login}")
-    public ResponseEntity<List<OrderResponse>> checkout(@PathVariable String login) {
+    public ResponseEntity<List<OrderResponse>> listAllOrders(@PathVariable String login) {
         return ResponseEntity.ok(orderService.listOrders(login));
     }
 }

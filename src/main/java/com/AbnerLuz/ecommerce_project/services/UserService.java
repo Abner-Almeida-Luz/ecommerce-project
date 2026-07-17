@@ -10,12 +10,12 @@ import com.AbnerLuz.ecommerce_project.exceptions.ResourceNotFoundException;
 import com.AbnerLuz.ecommerce_project.infra.security.TokenService;
 import com.AbnerLuz.ecommerce_project.repositories.CartRepository;
 import com.AbnerLuz.ecommerce_project.repositories.UserRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 

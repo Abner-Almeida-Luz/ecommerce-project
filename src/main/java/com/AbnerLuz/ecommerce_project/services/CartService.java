@@ -14,6 +14,7 @@ import com.AbnerLuz.ecommerce_project.repositories.ProductRepository;
 import com.AbnerLuz.ecommerce_project.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
@@ -29,10 +30,8 @@ public class CartService {
         return new CartResponse(
                 cart.getId(),
                 cart.getUser().getId(),
-                CartItemResponse[] responseItems = cart.getCartItems().stream()
-                .map(this::toResponseCartItem)
-                .toArray(CartItemResponse[]::new);
-        );
+                cart.getCartItems().stream()
+                .map(this::toResponseCartItem).toList());
     }
 
     public CartItemResponse toResponseCartItem(CartItems cartItem) {
@@ -46,28 +45,29 @@ public class CartService {
         );
     }
 
+    @Transactional()
     public CartResponse viewCart(String login){
         Users user =  userRepository.findByLogin(login).orElseThrow(() -> new ResourceNotFoundException("User not found with login: " + login));
         Carts cart = user.getCart();
         return toResponseCart(cart);
     }
 
+    @Transactional
     public CartResponse addItem(CartItemsRequest data){
         Carts cart = cartRepository.findById(data.cart_id()).orElseThrow(() -> new ResourceNotFoundException("Cart not found with id: " + data.cart_id()));
         Products product = productRepository.findById(data.product_id()).orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + data.product_id()));
         BigDecimal total = product.getPrice().multiply(BigDecimal.valueOf(data.quantity()));
         CartItems cartItem = new CartItems(cart,product,data.quantity(),total);
         cartItemsRepository.save(cartItem);
-        cart.getCartItems().add(cartItem);
-        cartRepository.save(cart);
         return toResponseCart(cart);
     }
 
+    @Transactional
     public CartResponse removeItem(Long itemId){
         CartItems  cartItem = cartItemsRepository.findById(itemId).orElseThrow(() -> new ResourceNotFoundException("Cart Item not found with id: " + itemId));
         Carts cart = cartItem.getCart();
         cartItemsRepository.deleteById(itemId);
-        cartRepository.save(cart);
+        cart.getCartItems().removeIf(item -> item.getId().equals(itemId));
         return toResponseCart(cart);
     }
 }
